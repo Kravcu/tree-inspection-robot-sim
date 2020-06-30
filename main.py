@@ -231,8 +231,8 @@ class Simulation:
                                      Robot(0, 100)]
 
         # todo initiate fire
-        fire_x_limit = len(self.tree_map)
-        fire_y_limit = len(self.tree_map[0])
+        fire_x_limit = len(self.tree_map) - 1
+        fire_y_limit = len(self.tree_map[0]) - 1
 
         fire_x = np.random.randint(fire_x_limit)
         fire_y = np.random.randint(fire_y_limit)
