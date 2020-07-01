@@ -262,7 +262,7 @@ class Simulation:
             fire_y_maximal = fire_y + 1
         
         
-        for i in range(30):
+        for i in range(2000):
             print(f"Iteration: {i}")
             for index, worker in enumerate(self.workers):
                 possible_moves = []
@@ -356,49 +356,49 @@ class Simulation:
                                 except IndexError:
                                     pass
                                 
-                                if np.random.random <0.2:
+                                if np.random.random() <0.2:
                                     try:
                                         if self.tree_map[x-1][y+1] != 2:
                                             self.tree_map[x-1][y+1] = 1.5
                                     except IndexError:
                                         pass
-                                if np.random.random <0.2:
+                                if np.random.random() <0.2:
                                     try:
                                         if self.tree_map[x+1][y+1] != 2:
                                             self.tree_map[x+1][y+1] = 1.5
                                     except IndexError:
                                         pass
-                                if np.random.random <0.2:
+                                if np.random.random() <0.2:
                                     try:
                                         if self.tree_map[x+1][y-1] != 2:
                                             self.tree_map[x+1][y-1] = 1.5
                                     except IndexError:
                                         pass
-                                if np.random.random <0.2:
+                                if np.random.random() <0.2:
                                     try:
                                         if self.tree_map[x-1][y-1] != 2:
                                             self.tree_map[x-1][y-1] = 1.5
                                     except IndexError:
                                         pass
-                                if np.random.random <0.2:
+                                if np.random.random() <0.2:
                                     try:
                                         if self.tree_map[x-2][y] != 2:
                                             self.tree_map[x-2][y] = 1.5
                                     except IndexError:
                                         pass
-                                if np.random.random <0.2:
+                                if np.random.random() <0.2:
                                     try:
                                         if self.tree_map[x+2][y] != 2:
                                             self.tree_map[x+2][y] = 1.5
                                     except IndexError:
                                         pass
-                                if np.random.random <0.2:
+                                if np.random.random() <0.2:
                                     try:
                                         if self.tree_map[x][y-2] != 2:
                                             self.tree_map[x][y-2] = 1.5
                                     except IndexError:
                                         pass
-                                if np.random.random <0.2:
+                                if np.random.random() <0.2:
                                     try:
                                         if self.tree_map[x][y+2] != 2:
                                             self.tree_map[x][y+2] = 1.5
