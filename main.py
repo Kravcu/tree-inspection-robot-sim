@@ -77,7 +77,7 @@ class Forest:
         for x in range(self.rows):
             for y in range(self.cols):
                 if self.forest_data[x][y] != 1:
-                    self.forest_data[x][y] = np.random.normal(0.0, 2)  # rozklad gaussa, rodek 0.0, zróżicowanie terenu
+                    self.forest_data[x][y] = np.random.random() -0.5 # rozklad gaussa, rodek 0.0, zróżicowanie terenu
 
     def get_tree_map(self) -> np.ndarray:
         return self.raw_tree_data
@@ -241,6 +241,26 @@ class Simulation:
         fire_y = 10
 
         self.tree_map[fire_x][fire_y] = 2
+        if fire_x - 1 < 0:
+            fire_x_minimal = 0
+        else:
+            fire_x_minimal = fire_x - 1
+
+        if fire_x + 1 > 886:
+            fire_x_maximal = 886
+        else:
+            fire_x_maximal = fire_x + 1
+
+        if fire_y - 1 < 0:
+            fire_y_minimal = 0
+        else:
+            fire_y_minimal = fire_y - 1
+
+        if fire_y + 1 > 1317:
+            fire_y_maximal = 1317
+        else:
+            fire_y_maximal = fire_y + 1
+        
         
         for i in range(10000):
             for index, worker in enumerate(self.workers):
@@ -287,7 +307,7 @@ class Simulation:
                         
                         if i!=0:
                             if abs(self.terrain_map[worker.position.x][worker.position.y] -
-                                   self.terrain_map[worker.pos_history[-2][0]][worker.pos_history[-2][1]]) >= 0.4:
+                                   self.terrain_map[worker.pos_history[-2][0]][worker.pos_history[-2][1]]) >= 0.8:
                                 worker.change_state(State.Tipped_over)  # worker tipped over
                                 self.call_for_help(index, worker, "tripped")
                         if worker.check_for_fire(self.tree_map):
@@ -308,26 +328,49 @@ class Simulation:
                 # todo spread fire
                 tree_map_helper = self.tree_map
 
-                for x in range(fire_x_limit):
-                    for y in range(fire_y_limit):
+                for x in range(fire_x_minimal,fire_x_maximal):
+                    for y in range(fire_y_minimal,fire_y_maximal):
                         if self.tree_map[x][y] == 2:
-                            if np.random.random() > 0.5:
+                            if np.random.random() < 0.2:
                                 try:
                                     self.tree_map[x + 1][y] = 2
                                 except IndexError:
                                     pass
+                            if np.random.random() < 0.2:
                                 try:
                                     self.tree_map[x - 1][y] = 2
                                 except IndexError:
                                     pass
+                            if np.random.random() < 0.2:
                                 try:
                                     self.tree_map[x][y + 1] = 2
                                 except IndexError:
                                     pass
+                            if np.random.random() < 0.2:
                                 try:
                                     self.tree_map[x][y - 1] = 2
                                 except IndexError:
                                     pass
+ 
+                if fire_x_minimal - 1 < 0:
+                    fire_x_minimal = 0
+                else:
+                    fire_x_minimal = fire_x_minimal - 1
+
+                if fire_x_maximal + 1 > 886:
+                    fire_x_maximal = 886
+                else:
+                    fire_x_maximal = fire_x_maximal + 1
+                    
+                if fire_y_minimal - 1 < 0:
+                    fire_y_minimal = 0
+                else:
+                    fire_y_minimal = fire_y_minimal - 1
+                    
+                if fire_y_maximal + 1 > 1317:
+                    fire_y_maximal = 1317
+                else:
+                    fire_y_maximal = fire_y_maximal + 1               
 
                 # TODO add dynamic plotting of workers position
                 plt.scatter(worker.position.get_x(), worker.position.get_y(), s=5)
@@ -378,3 +421,5 @@ class Simulation:
 Bialowieska = Forest()
 sim = Simulation(Bialowieska)
 sim.simulate()
+
+
