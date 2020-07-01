@@ -284,15 +284,17 @@ class Simulation:
                         choice = random.choice(possible_moves)
                         worker.walk(choice)
                         worker.change_state(State.Walk)  # worker went ahead
-                        if abs(self.terrain_map[worker.position.x][worker.position.y] -
-                               self.terrain_map[worker.pos_history[-2].x][worker.pos_history[-2].y]) >= 0.4:
-                            worker.change_state(State.Tipped_over)  # worker tipped over
-                            self.call_for_help(index, worker, "tripped")
+                        
+                        if i!=0:
+                            if abs(self.terrain_map[worker.position.x][worker.position.y] -
+                                   self.terrain_map[worker.pos_history[-2][0]][worker.pos_history[-2][1]]) >= 0.4:
+                                worker.change_state(State.Tipped_over)  # worker tipped over
+                                self.call_for_help(index, worker, "tripped")
                         if worker.check_for_fire(self.tree_map):
                             worker.change_state(State.Fire_detected)
                             self.call_for_help(index, worker, "fire")
                             
-                    print(f"X: {worker.position.get_x()}; Y: {worker.position.get_y()}")
+                    print(f"Worker {index}: X: {worker.position.get_x()}; Y: {worker.position.get_y()}")
                     
                     try:
                         self.visited[worker.position.get_x()][worker.position.get_y()] = 1
