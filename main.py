@@ -77,7 +77,7 @@ class Forest:
         for x in range(self.rows):
             for y in range(self.cols):
                 if self.forest_data[x][y] != 1:
-                    self.forest_data[x][y] = np.random.random() -0.5 # rozklad gaussa, rodek 0.0, zróżicowanie terenu
+                    self.forest_data[x][y] = np.random.random()-0.5 # rozklad gaussa, rodek 0.0, zróżicowanie terenu
 
     def get_tree_map(self) -> np.ndarray:
         return self.raw_tree_data
@@ -226,7 +226,7 @@ class Simulation:
         self.visited = [[0 for x in range(self.img_x)] for y in range(self.img_y)]
         plt.imshow(self.img, origin={0, 0})
 
-        self.workers: List[Robot] = [Robot(1300, 430),
+        self.workers: List[Robot] = [Robot(430, 1300),
                                      Robot(800, 430),
                                      Robot(800, 1000),
                                      Robot(0, 100)]
@@ -237,8 +237,8 @@ class Simulation:
 
         #fire_x = np.random.randint(fire_x_limit)
         #fire_y = np.random.randint(fire_y_limit)
-        fire_x = 10
-        fire_y = 10
+        fire_x = 500
+        fire_y = 500
 
         self.tree_map[fire_x][fire_y] = 2
         if fire_x - 1 < 0:
@@ -262,13 +262,14 @@ class Simulation:
             fire_y_maximal = fire_y + 1
         
         
-        for i in range(10000):
+        for i in range(100):
+            print(f"Iteration: {i}")
             for index, worker in enumerate(self.workers):
                 possible_moves = []
                 x = worker.position.get_x()
                 y = worker.position.get_y()
 
-                if random.randint(0, 100) < 2:
+                if np.random.random() > 0.9999:
                     self.call_for_help(index, worker, "branch")  # damaged by falling branch
                 else:
                     try:
@@ -307,7 +308,7 @@ class Simulation:
                         
                         if i!=0:
                             if abs(self.terrain_map[worker.position.x][worker.position.y] -
-                                   self.terrain_map[worker.pos_history[-2][0]][worker.pos_history[-2][1]]) >= 0.8:
+                                   self.terrain_map[worker.pos_history[-2][0]][worker.pos_history[-2][1]]) > 0.987:
                                 worker.change_state(State.Tipped_over)  # worker tipped over
                                 self.call_for_help(index, worker, "tripped")
                         if worker.check_for_fire(self.tree_map):
@@ -372,12 +373,26 @@ class Simulation:
                 else:
                     fire_y_maximal = fire_y_maximal + 1               
 
-                # TODO add dynamic plotting of workers position
-                plt.scatter(worker.position.get_x(), worker.position.get_y(), s=5)
-                plt.title('Tree inspection robot simulation')
-                plt.xlabel('x')
-                plt.ylabel('y')
-                plt.show()
+            # TODO add dynamic plotting of workers position
+            # TODO add dynamic plotting of workers position
+            # plt.title('Tree inspection robot simulation')
+            # plt.xlabel('x')
+            # plt.ylabel('y')
+            # plt.imshow(self.img, origin={0, 0})
+            # for worker in self.workers:
+            #     plt.axis([0, 1317, 0, 886])
+            #     plt.scatter(worker.position.get_x(), worker.position.get_y())
+            # plt.show()
+        
+        plt.imshow(self.img, origin={0, 0})
+        for worker in self.workers:
+            for pos in worker.pos_history:
+                plt.scatter(pos[1],pos[0],c='#1f77b4')
+                
+        plt.title("Inspected")
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.show()
 
     def call_for_help(self, idd, robot, cause):
         if cause == "fire":
