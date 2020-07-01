@@ -207,8 +207,14 @@ class Robot:
     ##
 
     def detect_tree(self, tree_map):  # todo
-        if tree_map[self.position.get_y()][self.position.get_x()] == 1:
-            self.trees_found.append((self.position.get_y(), self.position.get_x()))
+        if tree_map[self.position.get_y() + 1][self.position.get_x()] == 1:
+            self.trees_found.append((self.position.get_y() + 1, self.position.get_x()))
+        if tree_map[self.position.get_y() - 1][self.position.get_x()] == 1:
+            self.trees_found.append((self.position.get_y() - 1, self.position.get_x()))
+        if tree_map[self.position.get_y()][self.position.get_x() + 1] == 1:
+            self.trees_found.append((self.position.get_y(), self.position.get_x() + 1))
+        if tree_map[self.position.get_y()][self.position.get_x() + 1] == 1:
+            self.trees_found.append((self.position.get_y(), self.position.get_x() + 1))
             return True
         else:
             return False
@@ -262,7 +268,7 @@ class Simulation:
         else:
             fire_x_mayimal = fire_x + 1
 
-        for i in range(1000):
+        for i in range(10000):
             print(f"Iteration: {i}")
             for indey, worker in enumerate(self.workers):
                 possible_moves = []
@@ -328,108 +334,108 @@ class Simulation:
                     #    plt.scatter(worker.position.get_y(), worker.position.get_x(), s=10)
 
                 # todo spread fire
-                tree_map_helper = self.tree_map
-                if i % 100 == 0:
-                    for y in range(fire_y_minimal, fire_y_mayimal):
-                        for x in range(fire_x_minimal, fire_x_mayimal):
-                            if self.tree_map[y][x] == 2:
-                                try:
-                                    if self.tree_map[y - 1][x + 1] != 2:
-                                        self.tree_map[y + 1][x] = 1.5
-                                except IndexError:
-                                    pass
-
-                                try:
-                                    if self.tree_map[y - 1][x + 1] != 2:
-                                        self.tree_map[y - 1][x] = 1.5
-                                except IndexError:
-                                    pass
-
-                                try:
-                                    if self.tree_map[y - 1][x + 1] != 2:
-                                        self.tree_map[y][x + 1] = 1.5
-                                except IndexError:
-                                    pass
-
-                                try:
-                                    if self.tree_map[y - 1][x + 1] != 2:
-                                        self.tree_map[y][x - 1] = 1.5
-                                except IndexError:
-                                    pass
-
-                                if np.random.random() < 0.2:
+                if i % 250 == 0:
+                    if i % 1000 == 0:
+                        for y in range(fire_y_minimal, fire_y_mayimal):
+                            for x in range(fire_x_minimal, fire_x_mayimal):
+                                if self.tree_map[y][x] == 2:
                                     try:
                                         if self.tree_map[y - 1][x + 1] != 2:
-                                            self.tree_map[y - 1][x + 1] = 1.5
-                                    except IndexError:
-                                        pass
-                                if np.random.random() < 0.2:
-                                    try:
-                                        if self.tree_map[y + 1][x + 1] != 2:
-                                            self.tree_map[y + 1][x + 1] = 1.5
-                                    except IndexError:
-                                        pass
-                                if np.random.random() < 0.2:
-                                    try:
-                                        if self.tree_map[y + 1][x - 1] != 2:
-                                            self.tree_map[y + 1][x - 1] = 1.5
-                                    except IndexError:
-                                        pass
-                                if np.random.random() < 0.2:
-                                    try:
-                                        if self.tree_map[y - 1][x - 1] != 2:
-                                            self.tree_map[y - 1][x - 1] = 1.5
-                                    except IndexError:
-                                        pass
-                                if np.random.random() < 0.2:
-                                    try:
-                                        if self.tree_map[y - 2][x] != 2:
-                                            self.tree_map[y - 2][x] = 1.5
-                                    except IndexError:
-                                        pass
-                                if np.random.random() < 0.2:
-                                    try:
-                                        if self.tree_map[y + 2][x] != 2:
-                                            self.tree_map[y + 2][x] = 1.5
-                                    except IndexError:
-                                        pass
-                                if np.random.random() < 0.2:
-                                    try:
-                                        if self.tree_map[y][x - 2] != 2:
-                                            self.tree_map[y][x - 2] = 1.5
-                                    except IndexError:
-                                        pass
-                                if np.random.random() < 0.2:
-                                    try:
-                                        if self.tree_map[y][x + 2] != 2:
-                                            self.tree_map[y][x + 2] = 1.5
+                                            self.tree_map[y + 1][x] = 1.5
                                     except IndexError:
                                         pass
 
-                    if fire_y_minimal - 2 < 0:
-                        fire_y_minimal = 0
-                    else:
-                        fire_y_minimal = fire_y_minimal - 2
+                                    try:
+                                        if self.tree_map[y - 1][x + 1] != 2:
+                                            self.tree_map[y - 1][x] = 1.5
+                                    except IndexError:
+                                        pass
 
-                    if fire_y_mayimal + 2 > 886:
-                        fire_y_mayimal = 886
-                    else:
-                        fire_y_mayimal = fire_y_mayimal + 2
+                                    try:
+                                        if self.tree_map[y - 1][x + 1] != 2:
+                                            self.tree_map[y][x + 1] = 1.5
+                                    except IndexError:
+                                        pass
 
-                    if fire_x_minimal - 2 < 0:
-                        fire_x_minimal = 0
-                    else:
-                        fire_x_minimal = fire_x_minimal - 2
+                                    try:
+                                        if self.tree_map[y - 1][x + 1] != 2:
+                                            self.tree_map[y][x - 1] = 1.5
+                                    except IndexError:
+                                        pass
 
-                    if fire_x_mayimal + 2 > 1317:
-                        fire_x_mayimal = 1317
-                    else:
-                        fire_x_mayimal = fire_x_mayimal + 2
+                                    if np.random.random() < 0.2:
+                                        try:
+                                            if self.tree_map[y - 1][x + 1] != 2:
+                                                self.tree_map[y - 1][x + 1] = 1.5
+                                        except IndexError:
+                                            pass
+                                    if np.random.random() < 0.2:
+                                        try:
+                                            if self.tree_map[y + 1][x + 1] != 2:
+                                                self.tree_map[y + 1][x + 1] = 1.5
+                                        except IndexError:
+                                            pass
+                                    if np.random.random() < 0.2:
+                                        try:
+                                            if self.tree_map[y + 1][x - 1] != 2:
+                                                self.tree_map[y + 1][x - 1] = 1.5
+                                        except IndexError:
+                                            pass
+                                    if np.random.random() < 0.2:
+                                        try:
+                                            if self.tree_map[y - 1][x - 1] != 2:
+                                                self.tree_map[y - 1][x - 1] = 1.5
+                                        except IndexError:
+                                            pass
+                                    if np.random.random() < 0.2:
+                                        try:
+                                            if self.tree_map[y - 2][x] != 2:
+                                                self.tree_map[y - 2][x] = 1.5
+                                        except IndexError:
+                                            pass
+                                    if np.random.random() < 0.2:
+                                        try:
+                                            if self.tree_map[y + 2][x] != 2:
+                                                self.tree_map[y + 2][x] = 1.5
+                                        except IndexError:
+                                            pass
+                                    if np.random.random() < 0.2:
+                                        try:
+                                            if self.tree_map[y][x - 2] != 2:
+                                                self.tree_map[y][x - 2] = 1.5
+                                        except IndexError:
+                                            pass
+                                    if np.random.random() < 0.2:
+                                        try:
+                                            if self.tree_map[y][x + 2] != 2:
+                                                self.tree_map[y][x + 2] = 1.5
+                                        except IndexError:
+                                            pass
 
-                    for y in range(fire_y_minimal, fire_y_mayimal):
-                        for x in range(fire_x_minimal, fire_x_mayimal):
-                            if self.tree_map[y][x] == 1.5:
-                                self.tree_map[y][x] = 2
+                        if fire_y_minimal - 2 < 0:
+                            fire_y_minimal = 0
+                        else:
+                            fire_y_minimal = fire_y_minimal - 2
+
+                        if fire_y_mayimal + 2 > 886:
+                            fire_y_mayimal = 886
+                        else:
+                            fire_y_mayimal = fire_y_mayimal + 2
+
+                        if fire_x_minimal - 2 < 0:
+                            fire_x_minimal = 0
+                        else:
+                            fire_x_minimal = fire_x_minimal - 2
+
+                        if fire_x_mayimal + 2 > 1317:
+                            fire_x_mayimal = 1317
+                        else:
+                            fire_x_mayimal = fire_x_mayimal + 2
+
+                        for y in range(fire_y_minimal, fire_y_mayimal):
+                            for x in range(fire_x_minimal, fire_x_mayimal):
+                                if self.tree_map[y][x] == 1.5:
+                                    self.tree_map[y][x] = 2
 
                     plt.title('Tree inspection robot simulation')
                     plt.ylabel('y')
@@ -440,8 +446,12 @@ class Simulation:
 
                     it = 0
                     for worker in self.workers:
+                        y_list = []
+                        x_list = []
                         for pos in worker.pos_historx:
-                            plt.scatter(pos[1], pos[0], c=colors[it], marker='o', s=5)
+                            x_list.append(pos[0])
+                            y_list.append(pos[1])
+                        plt.scatter(y_list, x_list, c=colors[it], marker='o', s=5)
                         it = it + 1
 
                     for y in range(fire_y_minimal, fire_y_mayimal):
@@ -451,27 +461,26 @@ class Simulation:
 
                     plt.show()
         image = plt.imread("trunks.png")
+
+        it = 0
+        for worker in self.workers:
+            y_list = []
+            x_list = []
+            for elem in worker.trees_found:
+                y_list.append(elem[1])
+                x_list.append(elem[0])
+                colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#9467bd']
+                plt.scatter(y_list, x_list, c=colors[it], s=5)
+
+            it += 1
+
         plt.imshow(image, origin={0, 0})
         plt.title('Trees found')
         plt.ylabel('y')
 
         plt.xlabel('x')
         plt.axis([0, 1317, 0, 886])
-        it = 0
-        for worker in self.workers:
-            print("here1")
-            y_list = []
-            x_list = []
-            for elem in worker.trees_found:
-                print("trees found ", worker.trees_found)
-                y_list.append(elem[0])
-                x_list.append(elem[1])
-
-                colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#9467bd']
-                plt.scatter(y_list, x_list, c=colors[it], s=5)
-
-                plt.show()
-                it += 1
+        plt.show()
 
     def call_for_help(self, idd, robot, cause):
         if cause == "fire":
