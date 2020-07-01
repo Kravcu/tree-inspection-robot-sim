@@ -77,7 +77,7 @@ class Forest:
         for y in range(self.rows):
             for x in range(self.cols):
                 if self.forest_data[y][x] != 1:
-                    self.forest_data[y][x] = np.random.random() - 0.5  # rozklad gaussa, rodek 0.0, zróżicowanie terenu
+                    self.forest_data[y][x] = np.random.random() - 0.5  # rozklad gaussa, srodek 0.0, zróżnicowanie terenu
 
     def get_tree_map(self) -> np.ndarray:
         return self.raw_tree_data
@@ -147,7 +147,7 @@ class Robot:
             self.position.move_down()
         self.pos_historx.append(self.position.get_pos())
 
-    def check_for_fire(self, tree_map_) -> bool:  # to do
+    def check_for_fire(self, tree_map_) -> bool:
         try:
             if tree_map_[self.position.y - 1][self.position.x - 1] == 2:
                 self.change_state(State.Fire_detected)
@@ -203,8 +203,6 @@ class Robot:
     def reposition(self, y, x):
         self.position = Position(y, x)
         self.change_state(State.Walk)
-
-    ##
 
     def detect_tree(self, tree_map):  # todo
         if tree_map[self.position.get_y() + 1][self.position.get_x()] == 1:
@@ -276,7 +274,7 @@ class Simulation:
                 x = worker.position.get_x()
 
                 if np.random.random() > 0.9999:
-                    self.call_for_help(indey, worker, "branch")  # damaged bx falling branch
+                    self.call_for_help(indey, worker, "branch")  # damaged by falling branch
                 else:
                     try:
                         if (self.visited[y + 1][x] == 0 and y + 1 <= self.img_y and self.tree_map[y + 1][x] != 1) or (
@@ -329,12 +327,7 @@ class Simulation:
                     except IndexError:
                         pass
 
-                    # if self.tree_map[worker.position.get_y()][worker.position.get_x()] == 1: # tutaj też nie wiem
-                    #    print("znalazlem se drzewo. zajebiscie")
-                    #    plt.scatter(worker.position.get_y(), worker.position.get_x(), s=10)
-
-                # todo spread fire
-                if i % 250 == 0:
+                if i % 250 == 0: # every 250th iteration do:
                     if i % 1000 == 0:
                         for y in range(fire_y_minimal, fire_y_mayimal):
                             for x in range(fire_x_minimal, fire_x_mayimal):
@@ -477,7 +470,6 @@ class Simulation:
         plt.imshow(image, origin={0, 0})
         plt.title('Trees found')
         plt.ylabel('y')
-
         plt.xlabel('x')
         plt.axis([0, 1317, 0, 886])
         plt.show()
