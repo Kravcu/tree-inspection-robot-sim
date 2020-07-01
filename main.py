@@ -4,6 +4,7 @@ from typing import *
 
 import matplotlib.pyplot as plt
 import numpy as np
+import copy
 
 
 class State(Enum):
@@ -71,7 +72,7 @@ class Forest:
                 if self.forest_data[x][y] == 0.5:
                     self.forest_data[x][y] = 1
 
-        self.raw_tree_data = self.forest_data
+        self.raw_tree_data = copy.deepcopy(self.forest_data)
 
         for x in range(self.rows):
             for y in range(self.cols):
@@ -133,7 +134,7 @@ class Robot:
         self.x_max_pos: float = x_max_pos
         self.y_max_pos: float = y_max_pos
         self.current_state: State = State.Init
-        self.trees_found = np.empty(y_max_pos, x_max_pos)
+        self.trees_found = np.empty((y_max_pos, x_max_pos))
 
     def walk(self, direction):
         if direction == "left":
@@ -221,24 +222,26 @@ class Simulation:
         self.tree_map: np.ndarray = tree_map.get_tree_map()
         self.terrain_map: np.ndarray = tree_map.get_terrain_map()
 
-        img_x, img_y = len(self.img[0]), len(self.img)
-        self.visited = [[0 for x in range(img_x)] for y in range(img_y)]
+        self.img_x, self.img_y = len(self.img[0]), len(self.img)
+        self.visited = [[0 for x in range(self.img_x)] for y in range(self.img_y)]
         plt.imshow(self.img, origin={0, 0})
 
         self.workers: List[Robot] = [Robot(1300, 430),
                                      Robot(800, 430),
                                      Robot(800, 1000),
                                      Robot(0, 100)]
-
-        # todo initiate fire
+        
+    def simulate(self):
         fire_x_limit = len(self.tree_map) - 1
         fire_y_limit = len(self.tree_map[0]) - 1
 
-        fire_x = np.random.randint(fire_x_limit)
-        fire_y = np.random.randint(fire_y_limit)
+        #fire_x = np.random.randint(fire_x_limit)
+        #fire_y = np.random.randint(fire_y_limit)
+        fire_x = 10
+        fire_y = 10
 
         self.tree_map[fire_x][fire_y] = 2
-
+        
         for i in range(10000):
             for index, worker in enumerate(self.workers):
                 possible_moves = []
@@ -249,7 +252,7 @@ class Simulation:
                     self.call_for_help(index, worker, "branch")  # damaged by falling branch
                 else:
                     try:
-                        if (self.visited[x + 1][y] == 0 and x + 1 <= img_x and self.tree_map[x + 1][y] != 1) or (
+                        if (self.visited[x + 1][y] == 0 and x + 1 <= self.img_x and self.tree_map[x + 1][y] != 1) or (
                                 x + 1, y) in worker.pos_history:
                             possible_moves.append('right')
                     except IndexError:
@@ -261,7 +264,7 @@ class Simulation:
                     except IndexError:
                         pass
                     try:
-                        if (self.visited[x][y + 1] == 0 and y + 1 <= img_y and self.tree_map[x][y + 1] != 1) or (
+                        if (self.visited[x][y + 1] == 0 and y + 1 <= self.img_y and self.tree_map[x][y + 1] != 1) or (
                                 x, y + 1) in worker.pos_history:
                             possible_moves.append('up')
                     except IndexError:
@@ -288,7 +291,13 @@ class Simulation:
                         if worker.check_for_fire(self.tree_map):
                             worker.change_state(State.Fire_detected)
                             self.call_for_help(index, worker, "fire")
-                    self.visited[worker.position.get_x()][worker.position.get_y()] = 1
+                            
+                    print(f"X: {worker.position.get_x()}; Y: {worker.position.get_y()}")
+                    
+                    try:
+                        self.visited[worker.position.get_x()][worker.position.get_y()] = 1
+                    except IndexError:
+                        pass
 
                     # if self.tree_map[worker.position.get_x()][worker.position.get_y()] == 1: # tutaj też nie wiem
                     #    print("znalazlem se drzewo. zajebiscie")
@@ -366,3 +375,4 @@ class Simulation:
 
 Bialowieska = Forest()
 sim = Simulation(Bialowieska)
+sim.simulate()

@@ -2,7 +2,7 @@ clc
 clear
 close all
 
-forest = imread("bialowieska.PNG");
+forest = imread("forest.png");
 [X, Y, Z] = size(forest);
 
 black_white_forest = zeros(X,Y);
@@ -133,3 +133,5 @@ imshow(indeks_final)
 
 figure()
 imshow(trees,[])
+
+imwrite(trees, 'trunks.png', 'PNG');
