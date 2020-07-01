@@ -262,7 +262,7 @@ class Simulation:
             fire_y_maximal = fire_y + 1
         
         
-        for i in range(100):
+        for i in range(30):
             print(f"Iteration: {i}")
             for index, worker in enumerate(self.workers):
                 possible_moves = []
@@ -385,9 +385,12 @@ class Simulation:
             # plt.show()
         
         plt.imshow(self.img, origin={0, 0})
+        colors = ['#1f77b4','#ff7f0e','#2ca02c','#d62728']
+        it = 0
         for worker in self.workers:
             for pos in worker.pos_history:
-                plt.scatter(pos[1],pos[0],c='#1f77b4')
+                plt.scatter(pos[1],pos[0],c=colors[it])
+            it = it+1
                 
         plt.title("Inspected")
         plt.xlabel('x')
