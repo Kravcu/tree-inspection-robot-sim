@@ -237,8 +237,8 @@ class Simulation:
 
         #fire_x = np.random.randint(fire_x_limit)
         #fire_y = np.random.randint(fire_y_limit)
-        fire_x = 500
-        fire_y = 500
+        fire_x = 400
+        fire_y = 600
 
         self.tree_map[fire_x][fire_y] = 2
         if fire_x - 1 < 0:
@@ -262,7 +262,7 @@ class Simulation:
             fire_y_maximal = fire_y + 1
         
         
-        for i in range(2000):
+        for i in range(300):
             print(f"Iteration: {i}")
             for index, worker in enumerate(self.workers):
                 possible_moves = []
@@ -328,7 +328,7 @@ class Simulation:
 
                 # todo spread fire
                 tree_map_helper = self.tree_map
-                if i%50 == 0:
+                if i%100 == 0:
                     for x in range(fire_x_minimal,fire_x_maximal):
                         for y in range(fire_y_minimal,fire_y_maximal):
                             if self.tree_map[x][y] == 2:
@@ -404,56 +404,51 @@ class Simulation:
                                             self.tree_map[x][y+2] = 1.5
                                     except IndexError:
                                         pass
-                                    
  
                     if fire_x_minimal - 2 < 0:
                         fire_x_minimal = 0
                     else:
-                        fire_x_minimal = fire_x_minimal - 1
+                        fire_x_minimal = fire_x_minimal - 2
 
                     if fire_x_maximal + 2 > 886:
                         fire_x_maximal = 886
                     else:
-                        fire_x_maximal = fire_x_maximal + 1
+                        fire_x_maximal = fire_x_maximal + 2
                     
                     if fire_y_minimal - 2 < 0:
                         fire_y_minimal = 0
                     else:
-                        fire_y_minimal = fire_y_minimal - 1
+                        fire_y_minimal = fire_y_minimal - 2
                     
                     if fire_y_maximal + 2 > 1317:
                         fire_y_maximal = 1317
                     else:
-                        fire_y_maximal = fire_y_maximal + 1               
+                        fire_y_maximal = fire_y_maximal + 2               
 
                     for x in range(fire_x_minimal,fire_x_maximal):
                         for y in range(fire_y_minimal,fire_y_maximal):
                             if self.tree_map[x][y] == 1.5:
                                 self.tree_map[x][y] = 2
-                                
-            # TODO add dynamic plotting of workers position
-            # TODO add dynamic plotting of workers position
-            # plt.title('Tree inspection robot simulation')
-            # plt.xlabel('x')
-            # plt.ylabel('y')
-            # plt.imshow(self.img, origin={0, 0})
-            # for worker in self.workers:
-            #     plt.axis([0, 1317, 0, 886])
-            #     plt.scatter(worker.position.get_x(), worker.position.get_y())
-            # plt.show()
-        
-        plt.imshow(self.img, origin={0, 0})
-        colors = ['#1f77b4','#ff7f0e','#2ca02c','#d62728']
-        it = 0
-        for worker in self.workers:
-            for pos in worker.pos_history:
-                plt.scatter(pos[1],pos[0],c=colors[it])
-            it = it+1
-                
-        plt.title("Inspected")
-        plt.xlabel('x')
-        plt.ylabel('y')
-        plt.show()
+                    
+                    plt.title('Tree inspection robot simulation')
+                    plt.xlabel('x')
+                    plt.ylabel('y')
+                    plt.imshow(self.img, origin={0, 0})
+                    plt.axis([0, 1317, 0, 886])
+                    colors = ['#1f77b4','#ff7f0e','#2ca02c','#9467bd']
+                    
+                    it = 0
+                    for worker in self.workers:
+                        for pos in worker.pos_history:
+                            plt.scatter(pos[1],pos[0],c=colors[it], marker='o', s=5)
+                        it = it+1
+                            
+                    for x in range(fire_x_minimal,fire_x_maximal):
+                        for y in range(fire_y_minimal,fire_y_maximal):
+                            if self.tree_map[x][y] == 2:
+                                plt.scatter(x,y,c='#d62728',marker='o', s=5)
+                            
+                    plt.show()
 
     def call_for_help(self, idd, robot, cause):
         if cause == "fire":
